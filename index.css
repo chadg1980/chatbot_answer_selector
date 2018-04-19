@@ -62,4 +62,13 @@ body{
     .query p{
         margin-left: 16px;
     }
+    .answers{
+        display: flex;
+    }
+
+    .answers > div{
+        max-width: 30%;
+        border: 1px solid black;
+    }
+    
 }
