@@ -31,10 +31,24 @@ body{
 .query p{
     margin-left: 16px;
 }
+.answers{
+    display: flex;
+    padding: 10px;
+    flex-wrap: wrap;
+    border: 1px solid blue;
+   
+    
+}
+.answers > div{
+    margin: 5px;
+    padding: 10px;
+   
+    border: 1px solid black;
+}
 
-@media only screen and (min-width: 768) {
+@media only screen and (min-width: 768px) {
     .body{
-        max-width: 1200px;
+        
         padding-left: 64px;
         padding-right: 64px;
         padding-top: 16px;
@@ -64,11 +78,15 @@ body{
     }
     .answers{
         display: flex;
+        padding: 10px;
+        border: 1px solid blue;
+       
     }
 
     .answers > div{
-        max-width: 30%;
-        border: 1px solid black;
+        background: black;
+        color: white;
+        border: 1px solid red;
     }
     
 }

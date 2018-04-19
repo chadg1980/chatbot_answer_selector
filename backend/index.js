@@ -66,6 +66,6 @@ function getParameterByName(name, url) {
 }
 
 function createListing(data, i) {
-  $(`<div>${data.textAnswer}</div>`)
-  .appendTo('.answers');
+  $(".answers").prepend(`<div>${data.textAnswer}</div>`)
+  
 }
