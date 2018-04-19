@@ -1,7 +1,10 @@
 # Chatbot Answer Selector README
 
 This tool will be opened from a link in Slack.  
-It will receive a Member ID and a Query.  
+It will receive a Query as a query string parameter. `?question=what%20is%20&memberid=14294` 
+`question` `string`
+`memberid` `number`
+and a member ID
 The query will be sent to the Leana Diagnostic API `https://xnoyn83321.execute-api.us-west-2.amazonaws.com/dev/lenaquery`  
 The return value will include the top 3/4 answers.  
 The answers will be displayed as buttons for the Expert to select.  

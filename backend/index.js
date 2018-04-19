@@ -13,25 +13,24 @@ $(document).ready(function() {
         },
         data: JSON.stringify({
           "Query": query, 
-          "Verbose": false,
+          "Verbose": true,
           "Highlight": false
         }),
         success: function(data) {
-        callback(data);
+        if(callback)callback(data);
         }
       });
     }
   
     function handleSearch(query) {
       azSearch(query, function(data) {
-        if (!data.value) {
+        if (!data) {
             console.log('No Matches');
            /*$('.answer-listing-wrap').append('<h3>No matches</h3>');*/
           return;
         }
         data.value.forEach((el) =>{
-            console.log(el);
-          //createListing(el);
+          createListing(el);
         });
       });
     }
@@ -40,7 +39,33 @@ $(document).ready(function() {
     if (queryQuestion) {
         //$('input').val(queryQuestion);
         //$('.search').trigger('click');   
-        azSearch(queryQuestion);
+        $('#incomingQuery').append(queryQuestion);
+        handleSearch(queryQuestion);
+    }  
+    var memberid = getParameterByName('memberid');
+    if (memberid) {
+        //$('input').val(queryQuestion);
+        //$('.search').trigger('click'); 
+        $('#member').append(' ' + memberid); 
+        console.log(memberid);
+        
     }  
 
 });
+
+/* Helper Functions */
+function getParameterByName(name, url) {
+  
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function createListing(data, i) {
+  $(`<p>${data.textAnswer}</p>`)
+  .appendTo('.answers');
+}
