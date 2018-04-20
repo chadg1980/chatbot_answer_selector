@@ -74,7 +74,9 @@ function createListing(data, i, memberid) {
     ${data["@search.score"]}</p><p id="textAnswer${i}">
     ${data.textAnswer}</p>
     <input type="text" class="textboxAnswer" id="textInput${i}" value="${data.textAnswer}"/>
+    <div class="buttonCenter">
     <button id="myButton${i}">Copy to Clipboard</>
+    </div>
     </div>
   `)
   

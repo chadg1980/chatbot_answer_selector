@@ -70,7 +70,8 @@ p {
 }
 .textboxAnswer{
     width: 1%;
-       
+    position: absolute;
+    left: 5000px;
 }
 
 @media only screen and (min-width: 768px) {
@@ -114,6 +115,7 @@ p {
         margin-right: 0px;
     }
     .answers{
+        background: white;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
@@ -129,13 +131,18 @@ p {
         margin-left: 0px;
         margin-right: 0px;
         margin-bottom: 10px;
-        border: 1px solid black;
+        border: .5px solid black;
+        box-shadow:  3px 3px 0px #999;
 
     }
     .answers >div > p{
         margin-top: 5px;
         max-width: 420px;
         word-wrap: break-word;
+    }
+    .buttonCenter{
+        display: flex;
+        justify-content: center;
     }
     .score{
         font-size: 1em;
