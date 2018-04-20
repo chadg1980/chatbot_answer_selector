@@ -43,6 +43,11 @@ $(document).ready(function() {
         $('#incomingQuery').append(queryQuestion);
         $('#member').append(' ' + memberid); 
         handleSearch(queryQuestion, memberid);
+    }
+    else{
+      $('.header').replaceWith('<h1>Bad Data</h1>')
+      $('.query').remove();
+      window.location.replace("http://google.com");
     }  
 });
 

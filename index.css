@@ -1,5 +1,9 @@
 body{
-    background-color: lightgray;
+    background-color: #D3D3D3;
+    
+}
+p {
+    font-size: 1.25em;
 }
 .body{
     padding-left: 8px;
@@ -25,7 +29,7 @@ body{
 .query{
     background: lavenderblush;
     padding-left: 16px;
-    border: 1px solid red;
+    
 }
 .query p{
     margin-left: 16px;
@@ -34,15 +38,14 @@ body{
     display: flex;
     padding: 10px;
     flex-wrap: wrap;
-    border: 1px solid blue;
+    
    
     
 }
 .answers > div{
-    margin: 5px;
     padding: 10px;
     max-width: 95%;
-    border: 1px solid black;
+    
 }
 .score{
     padding-top: 0px;
@@ -72,45 +75,71 @@ body{
 
 @media only screen and (min-width: 768px) {
     .body{
-        
+        max-width: 1200px;
         padding-left: 64px;
         padding-right: 64px;
         padding-top: 16px;
-        background-color: lightgray;
+        background-color: #D3D3D3;
     }
 
     .header{
-        border: 1px solid black;
         padding-left: 16px;
+        padding-right: 16px;
+        background: white;
     }
     .header h1{
+        color: #8AB43F;
         margin-bottom: 0px;
     
     }
     .header h2{
         padding-left: 16px;
         margin-top: 0px;
+        margin-bottom: 5px;
+        padding-bottom: 0px;
     }
 
     .query{
-        background: lavenderblush;
+        background: white;
         padding-left: 16px;
-        border: 1px solid red;
+        padding-bottom: 10px;
     }
-    .query p{
+    .query h3{
+        margin-top: 0px;
+        
+    }
+    #incomingQuery{
         margin-left: 16px;
+        margin-bottom: 0px;
+        margin-right: 0px;
     }
     .answers{
         display: flex;
-        padding: 10px;
-        border: 1px solid blue;
-       
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding-right: 0px;
+        margin-right: 0px;
     }
 
     .answers > div{
-        background: black;
-        color: white;
-        border: 1px solid red;
+        background: white;
+        color: black;
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-bottom: 10px;
+        border: 1px solid black;
+
+    }
+    .answers >div > p{
+        margin-top: 5px;
+        max-width: 420px;
+        word-wrap: break-word;
+    }
+    .score{
+        font-size: 1em;
+        text-align: center;
     }
     
 }
