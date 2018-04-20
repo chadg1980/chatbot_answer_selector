@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     // Store submitting question globally
     var QUESTION;
-  
+    
     function azSearch(query, callback) {
       $.ajax({
         type: "POST",
@@ -22,38 +22,35 @@ $(document).ready(function() {
       });
     }
   
-    function handleSearch(query) {
+    function handleSearch(query, memberid) {
       azSearch(query, function(data) {
         if (!data) {
             console.log('No Matches');
-           /*$('.answer-listing-wrap').append('<h3>No matches</h3>');*/
+           $('.header').append('<h3>No matches</h3>');
           return;
         }
-        data.value.forEach((el) =>{
-          createListing(el);
-        });
+        
+          for(let i = 0; i < data.value.length; i++){
+            createListing(data.value[i], i, memberid);
+          }
+       
       });
     }
 
     var queryQuestion = getParameterByName('question');
-    if (queryQuestion) {
-        //$('input').val(queryQuestion);
-        //$('.search').trigger('click');   
-        $('#incomingQuery').append(queryQuestion);
-        handleSearch(queryQuestion);
-    }  
     var memberid = getParameterByName('memberid');
-    if (memberid) {
-        //$('input').val(queryQuestion);
-        //$('.search').trigger('click'); 
+    if (queryQuestion && memberid) {
+        $('#incomingQuery').append(queryQuestion);
         $('#member').append(' ' + memberid); 
-        console.log(memberid);
-        
+        handleSearch(queryQuestion, memberid);
     }  
-
 });
 
+
+
 /* Helper Functions */
+
+
 function getParameterByName(name, url) {
   
   if (!url) url = window.location.href;
@@ -65,7 +62,24 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function createListing(data, i) {
-  $(".answers").prepend(`<div>${data.textAnswer}</div>`)
+function createListing(data, i, memberid) {
+  
+  $(".answers").append(`
+    <div id=answer${i}><p class="score">Score: 
+    ${data["@search.score"]}</p><p id="textAnswer${i}">
+    ${data.textAnswer}</p>
+    <input type="text" class="textboxAnswer" id="textInput${i}" value="${data.textAnswer}"/>
+    <button id="myButton${i}">Copy to Clipboard</>
+    </div>
+  `)
+  
+    $("#myButton"+i).click(function(){
+    let copyText = document.getElementById("textInput"+i);
+    copyText.select();
+    document.execCommand("Copy");
+    window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
+    });
+  
+ 
   
 }

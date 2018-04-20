@@ -8,9 +8,8 @@ body{
     
 }
 
-
 .header{
-    border: 1px solid black;
+    
     padding-left: 4px;
 }
 .header h1{
@@ -42,8 +41,33 @@ body{
 .answers > div{
     margin: 5px;
     padding: 10px;
-   
+    max-width: 95%;
     border: 1px solid black;
+}
+.score{
+    padding-top: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.answers {
+
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+.textboxAnswer{
+    width: 1%;
+       
 }
 
 @media only screen and (min-width: 768px) {
