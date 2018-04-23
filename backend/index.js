@@ -3,6 +3,7 @@ $(document).ready(function() {
     // Store submitting question globally
     var QUESTION;
     
+    
     function azSearch(query, callback) {
       $.ajax({
         type: "POST",
@@ -29,11 +30,33 @@ $(document).ready(function() {
            $('.header').append('<h3>No matches</h3>');
           return;
         }
-        
-          for(let i = 0; i < data.value.length; i++){
-            createListing(data.value[i], i, memberid);
+          let i;
+          let preQuestion = 'You recently asked Leana &quot;'+ query +
+              '&quot; I don\'t think Leana gave you the best answer. ' +
+              'A better answer is ';
+              
+              
+          for(i = 0; i < data.value.length; i++){
+            createListing(query, data.value[i], i, memberid, preQuestion);
           }
-       
+          
+          $(".answers").append(`
+          <div id="answer${i}">
+          <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
+          <input type="text" class="textboxAnswer" id="no-good-text" value="${preQuestion}"/>
+          <div class="buttonCenter">
+          <button id="no-good">Copy to Clipboard</>
+          </div>
+          </div>
+          `);
+          $("#no-good").click(function(){
+            let copyText = document.getElementById("no-good-text");
+            copyText.select();
+            console.log(copyText.textContent);
+            document.execCommand("Copy");
+            window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
+            });
+
       });
     }
 
@@ -41,7 +64,7 @@ $(document).ready(function() {
     var memberid = getParameterByName('memberid');
     if (queryQuestion && memberid) {
         $('#incomingQuery').append(queryQuestion);
-        $('#member').append('<a target="_blank" href="https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId=' + memberid+'"> '+memberid+' </a>'); 
+        $('#member').append(" " + memberid); 
         handleSearch(queryQuestion, memberid);
     }
     else{
@@ -57,7 +80,6 @@ $(document).ready(function() {
 
 
 function getParameterByName(name, url) {
-  
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
   var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
@@ -67,13 +89,14 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function createListing(data, i, memberid) {
-  
+function createListing(question, data, i, memberid, prequestion) {
+  let queryandAnswer = prequestion + data.textAnswer
+     
   $(".answers").append(`
     <div id=answer${i}><p class="score">Score: 
     ${data["@search.score"]}</p><p id="textAnswer${i}">
     ${data.textAnswer}</p>
-    <input type="text" class="textboxAnswer" id="textInput${i}" value="${data.textAnswer}"/>
+    <input type="text" class="textboxAnswer" id="textInput${i}" value="${queryandAnswer}"/>
     <div class="buttonCenter">
     <button id="myButton${i}">Copy to Clipboard</>
     </div>
@@ -83,6 +106,7 @@ function createListing(data, i, memberid) {
     $("#myButton"+i).click(function(){
     let copyText = document.getElementById("textInput"+i);
     copyText.select();
+    console.log(copyText.textContent);
     document.execCommand("Copy");
     window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
     });

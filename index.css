@@ -54,6 +54,13 @@ p {
     text-align: center;
     border: 1px solid black;
 }
+.queryClass{
+    font-style: italic;
+}
+
+.no_good{
+    font-weight: bold;
+}
 
 #incomingQuery{
     font-style: italic;
