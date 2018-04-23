@@ -1,3 +1,4 @@
+let qnaData = {};
 $(document).ready(function() {
 
     // Store submitting question globally
@@ -26,7 +27,7 @@ $(document).ready(function() {
     function handleSearch(query, memberid) {
       azSearch(query, function(data) {
         if (!data) {
-            console.log('No Matches');
+            console.log('No Data');
            $('.header').append('<h3>No matches</h3>');
           return;
         }
@@ -34,6 +35,11 @@ $(document).ready(function() {
           let preQuestion = 'You recently asked Leana &quot;'+ query +
               '&quot; I don\'t think Leana gave you the best answer. ' +
               'A better answer is ';
+          Object.assign(qnaData, {
+            "query": query,
+            "top_score" : [],
+            "ground_truth" : ""
+          });
               
               
           for(i = 0; i < data.value.length; i++){
@@ -50,9 +56,9 @@ $(document).ready(function() {
           </div>
           `);
           $("#no-good").click(function(){
+            sendToDatabase();
             let copyText = document.getElementById("no-good-text");
             copyText.select();
-            console.log(copyText.textContent);
             document.execCommand("Copy");
             window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
             });
@@ -91,6 +97,8 @@ function getParameterByName(name, url) {
 
 function createListing(question, data, i, memberid, prequestion) {
   let queryandAnswer = prequestion + data.textAnswer
+  qnaData["top_score"].push({"id":data.id, "score" : data["@search.score"] });
+  
      
   $(".answers").append(`
     <div id=answer${i}><p class="score">Score: 
@@ -104,13 +112,28 @@ function createListing(question, data, i, memberid, prequestion) {
   `)
   
     $("#myButton"+i).click(function(){
-    let copyText = document.getElementById("textInput"+i);
-    copyText.select();
-    console.log(copyText.textContent);
-    document.execCommand("Copy");
-    window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
+      Object.assign(qnaData, {"ground_truth" : data.textAnswer} );
+      //qnaData["ground_truth"].push(document.getElementById("textInput"+i));
+      sendToDatabase();
+      let copyText = document.getElementById("textInput"+i);
+      copyText.select();
+      console.log(copyText.textContent);
+      document.execCommand("Copy");
+      window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
     });
   
  
   
+}
+
+/* Send the JSON object to the database
+"query" : "incoming query"
+"top_scored" : [
+    {"id" : "idNumber", "score" : "queryScore" }
+  ],
+  "ground_truth" : "answer selected by expert"
+}
+*/
+function sendToDatabase(){
+  console.log(qnaData);
 }
