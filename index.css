@@ -138,6 +138,7 @@ answers >div > p{
         padding-right: 64px;
         padding-top: 16px;
         background-color: #D3D3D3;
+        margin: 0 auto;
     }
 
     .header{
