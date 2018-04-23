@@ -1,7 +1,7 @@
 # Chatbot Answer Selector README
 
 This tool will be opened from a link in Slack.  
-It will receive a Query as a query string parameter. `?question=what%20is%20&memberid=14294` 
+The Chatbot answer selector will receive a Query as a query string parameter. `?question=what%20is%20yoga&memberid=14294` 
 `question` `string`
 `memberid` `number`
 and a member ID

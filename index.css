@@ -2,9 +2,11 @@ body{
     background-color: #D3D3D3;
     
 }
+
 p {
     font-size: 1.25em;
 }
+
 .body{
     padding-left: 8px;
     padding-right: 8px;
@@ -13,52 +15,77 @@ p {
 }
 
 .header{
-    
     padding-left: 4px;
+    padding-right: 4px;
+    background: white;
 }
+
 .header h1{
     margin-top: 0px;
     margin-bottom: 0px;
 
 }
+
 .header h2{
     padding-left: 16px;
     margin-top: 0px;
 }
 
+#member a{
+    text-decoration: none;
+    color: #8AB43F;
+}
+
 .query{
-    background: lavenderblush;
+    background: white;
     padding-left: 16px;
-    
+    padding-right: 16px;
+    padding-bottom: 16px;
 }
-.query p{
-    margin-left: 16px;
+
+.query h3{
+    margin-top: 0px;
+    padding-top: 20px;
+    margin-bottom: 0px;
+    padding-bottom: 10px;
 }
+
+.queryBody{
+    text-align: center;
+    border: 1px solid black;
+}
+
+#incomingQuery{
+    font-style: italic;
+    margin-top: 0px;
+    padding: 8px;
+    margin-bottom: 0px;
+}
+
 .answers{
     display: flex;
     padding: 10px;
     flex-wrap: wrap;
-    
-   
-    
 }
+
 .answers > div{
     padding: 10px;
     max-width: 95%;
     
 }
+
 .score{
     padding-top: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
+
 .answers {
 
     /* These are technically the same, but use both */
     overflow-wrap: break-word;
     word-wrap: break-word;
-;
     /* Instead use this non-standard one: */
     word-break: break-word;
 
@@ -67,7 +94,37 @@ p {
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
+    
 }
+
+.answers > div{
+    background: white;
+    color: black;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 10px;
+    border: .5px solid black;
+    box-shadow:  3px 3px 0px #999;
+}
+
+answers >div > p{
+    margin-top: 5px;
+    max-width: 420px;
+    word-wrap: break-word;
+}
+
+.buttonCenter{
+    display: flex;
+    justify-content: center;
+}
+
+.score{
+    font-size: 1em;
+    text-align: center;
+}
+
 .textboxAnswer{
     width: 1%;
     position: absolute;
@@ -84,36 +141,52 @@ p {
     }
 
     .header{
-        padding-left: 16px;
+        padding-left: 32px;
         padding-right: 16px;
         background: white;
     }
+
     .header h1{
+        padding-top: 16px;
+        padding-left: 32px;
         color: #8AB43F;
         margin-bottom: 0px;
+    }
     
+    #member a{
+        text-decoration: none;
+        color: #8AB43F;
+        
+        margin-left: 4px;
+        padding-right: 5px;
+        box-shadow:  1px 1px 1px 1px #999;
     }
-    .header h2{
-        padding-left: 16px;
-        margin-top: 0px;
-        margin-bottom: 5px;
-        padding-bottom: 0px;
-    }
-
     .query{
         background: white;
-        padding-left: 16px;
+        padding-left: 64px;
+        padding-right: 56px;
         padding-bottom: 10px;
     }
+
     .query h3{
+        font-size: 1.75EM;
         margin-top: 0px;
         
     }
-    #incomingQuery{
-        margin-left: 16px;
-        margin-bottom: 0px;
-        margin-right: 0px;
+    .queryBody{
+        text-align: left;
+        border: 1px solid black;
+        
     }
+   
+   #incomingQuery{
+        margin-left: 0px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        padding-left: 64px;
+        font-style: italic;
+    }
+
     .answers{
         background: white;
         display: flex;
@@ -133,17 +206,19 @@ p {
         margin-bottom: 10px;
         border: .5px solid black;
         box-shadow:  3px 3px 0px #999;
-
     }
+
     .answers >div > p{
         margin-top: 5px;
         max-width: 420px;
         word-wrap: break-word;
     }
+
     .buttonCenter{
         display: flex;
         justify-content: center;
     }
+
     .score{
         font-size: 1em;
         text-align: center;

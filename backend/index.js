@@ -41,7 +41,7 @@ $(document).ready(function() {
     var memberid = getParameterByName('memberid');
     if (queryQuestion && memberid) {
         $('#incomingQuery').append(queryQuestion);
-        $('#member').append(' ' + memberid); 
+        $('#member').append('<a target="_blank" href="https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId=' + memberid+'"> '+memberid+' </a>'); 
         handleSearch(queryQuestion, memberid);
     }
     else{
