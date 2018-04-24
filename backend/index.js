@@ -96,14 +96,17 @@ function getParameterByName(name, url) {
 }
 
 function createListing(question, data, i, memberid, prequestion) {
-  let queryandAnswer = prequestion + data.textAnswer
+  let textAnswercleaned = data.textAnswer.replace(/(\[nm\])/g, "");
+  textAnswercleaned = textAnswercleaned.replace(/(\[uc\])/g, "");
+  textAnswercleaned = textAnswercleaned.replace(/(\[ns\])/g, "");
+  let queryandAnswer = prequestion + textAnswercleaned
   qnaData["top_score"].push({"id":data.id, "score" : data["@search.score"] });
   
      
   $(".answers").append(`
     <div id=answer${i}><p class="score">Score: 
     ${data["@search.score"]}</p><p id="textAnswer${i}">
-    ${data.textAnswer}</p>
+    ${textAnswercleaned}</p>
     <input type="text" class="textboxAnswer" id="textInput${i}" value="${queryandAnswer}"/>
     <div class="buttonCenter">
     <button id="myButton${i}">Copy to Clipboard</>
@@ -112,12 +115,12 @@ function createListing(question, data, i, memberid, prequestion) {
   `)
   
     $("#myButton"+i).click(function(){
-      Object.assign(qnaData, {"ground_truth" : data.textAnswer} );
+      Object.assign(qnaData, {"ground_truth" : textAnswercleaned} );
       //qnaData["ground_truth"].push(document.getElementById("textInput"+i));
       sendToDatabase();
       let copyText = document.getElementById("textInput"+i);
       copyText.select();
-      console.log(copyText.textContent);
+      
       document.execCommand("Copy");
       window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
     });
