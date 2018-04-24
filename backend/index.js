@@ -52,7 +52,9 @@ $(document).ready(function() {
         $(".answers").append(`
           <div id="answer${i}">
           <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
+          <label>Add Custom Answer:
           <textarea type="text" id="no_good_text" >${preQuestion}</textarea>
+          </label>
           <div class="buttonCenter">
           <button id="no-good">Copy to Clipboard</>
           </div>
@@ -131,13 +133,24 @@ function createListing(question, data, i, memberid, prequestion) {
  
   
 }
+/*qnaData, {
+  "query": query,
+  "top_score" : [],
+  "ground_truth" : {
+    "GTID" : "", 
+    "text" : ""
+  }*/
 
 /* Send the JSON object to the database
-"query" : "incoming query"
-"top_scored" : [
-    {"id" : "idNumber", "score" : "queryScore" }
+qnadata{
+  "query" : text,
+  "top_score" : [
+    {"id" : int, "score" : int }
   ],
-  "GTID" : int
+  "ground_truth"{
+    "GTID" : int,
+    "text" : string
+  }
 }
 */
 function sendToDatabase(){
