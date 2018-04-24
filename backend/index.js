@@ -27,41 +27,47 @@ $(document).ready(function() {
     function handleSearch(query, memberid) {
       azSearch(query, function(data) {
         if (!data) {
-            console.log('No Data');
-           $('.header').append('<h3>No matches</h3>');
+          console.log('No Data');
+          $('.header').append('<h3>No matches</h3>');
           return;
         }
-          let i;
-          let preQuestion = 'You recently asked Leana &quot;'+ query +
+        let i;
+        let preQuestion = 'You recently asked Leana &quot;'+ query +
               '&quot; I don\'t think Leana gave you the best answer. ' +
               'A better answer is ';
-          Object.assign(qnaData, {
-            "query": query,
-            "top_score" : [],
-            "ground_truth" : ""
-          });
-              
-              
-          for(i = 0; i < data.value.length; i++){
-            createListing(query, data.value[i], i, memberid, preQuestion);
+        Object.assign(qnaData, {
+          "query": query,
+          "top_score" : [],
+          "ground_truth" : {
+            "GTID" : "", 
+            "text" : ""
           }
+        });
+              
+              
+        for(i = 0; i < data.value.length; i++){
+          createListing(query, data.value[i], i, memberid, preQuestion);
+        }
           
-          $(".answers").append(`
+        $(".answers").append(`
           <div id="answer${i}">
           <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
-          <input type="text" class="textboxAnswer" id="no-good-text" value="${preQuestion}"/>
+          <textarea type="text" id="no_good_text" >${preQuestion}</textarea>
           <div class="buttonCenter">
           <button id="no-good">Copy to Clipboard</>
           </div>
           </div>
-          `);
-          $("#no-good").click(function(){
-            sendToDatabase();
-            let copyText = document.getElementById("no-good-text");
-            copyText.select();
-            document.execCommand("Copy");
-            window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
-            });
+        `);
+
+        $("#no-good").click(function(){
+          sendToDatabase();
+          let copyText = document.getElementById("no_good_text");
+          Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : copyText.value} });
+          
+          copyText.select();
+          document.execCommand("Copy");
+          window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
+        });
 
       });
     }
@@ -76,14 +82,13 @@ $(document).ready(function() {
     else{
       $('.header').replaceWith('<h1>Bad Data</h1>')
       $('.query').remove();
-      window.location.replace("http://google.com");
-    }  
+      //window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
+  }                                                   //Turned off for testing.
 });
 
 
 
 /* Helper Functions */
-
 
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
@@ -96,13 +101,11 @@ function getParameterByName(name, url) {
 }
 
 function createListing(question, data, i, memberid, prequestion) {
-  let textAnswercleaned = data.textAnswer.replace(/(\[nm\])/g, "");
-  textAnswercleaned = textAnswercleaned.replace(/(\[uc\])/g, "");
-  textAnswercleaned = textAnswercleaned.replace(/(\[ns\])/g, "");
+  let removeChars = /\[uc\]|\[nm\]|\[ns\]/g;
+  let textAnswercleaned = data.textAnswer.replace(removeChars, "");
   let queryandAnswer = prequestion + textAnswercleaned
   qnaData["top_score"].push({"id":data.id, "score" : data["@search.score"] });
   
-     
   $(".answers").append(`
     <div id=answer${i}><p class="score">Score: 
     ${data["@search.score"]}</p><p id="textAnswer${i}">
@@ -115,8 +118,8 @@ function createListing(question, data, i, memberid, prequestion) {
   `)
   
     $("#myButton"+i).click(function(){
-      Object.assign(qnaData, {"ground_truth" : textAnswercleaned} );
-      //qnaData["ground_truth"].push(document.getElementById("textInput"+i));
+      Object.assign(qnaData, {"ground_truth": {"GTID": data.id,  "text" : textAnswercleaned} });
+      
       sendToDatabase();
       let copyText = document.getElementById("textInput"+i);
       copyText.select();
@@ -134,7 +137,7 @@ function createListing(question, data, i, memberid, prequestion) {
 "top_scored" : [
     {"id" : "idNumber", "score" : "queryScore" }
   ],
-  "ground_truth" : "answer selected by expert"
+  "GTID" : int
 }
 */
 function sendToDatabase(){
