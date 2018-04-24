@@ -16,7 +16,8 @@ $(document).ready(function() {
         data: JSON.stringify({
           "Query": query, 
           "Verbose": true,
-          "Highlight": false
+          "Highlight": false,
+          "Routing" : "hslate"
         }),
         success: function(data) {
         if(callback)callback(data);
@@ -62,15 +63,13 @@ $(document).ready(function() {
         `);
 
         $("#no-good").click(function(){
-          sendToDatabase();
           let copyText = document.getElementById("no_good_text");
           Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : copyText.value} });
-          
+          sendToDatabase();
           copyText.select();
           document.execCommand("Copy");
           window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
         });
-
       });
     }
 
@@ -88,10 +87,7 @@ $(document).ready(function() {
   }                                                   //Turned off for testing.
 });
 
-
-
 /* Helper Functions */
-
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
@@ -129,17 +125,7 @@ function createListing(question, data, i, memberid, prequestion) {
       document.execCommand("Copy");
       window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
     });
-  
- 
-  
 }
-/*qnaData, {
-  "query": query,
-  "top_score" : [],
-  "ground_truth" : {
-    "GTID" : "", 
-    "text" : ""
-  }*/
 
 /* Send the JSON object to the database
 qnadata{

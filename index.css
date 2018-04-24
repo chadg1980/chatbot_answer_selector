@@ -121,6 +121,7 @@ p {
     box-shadow:  3px 3px 0px #999;
 }
 
+
 answers >div > p{
     margin-top: 5px;
     max-width: 420px;
@@ -219,6 +220,9 @@ answers >div > p{
         margin-bottom: 10px;
         border: .5px solid black;
         box-shadow:  3px 3px 0px #999;
+    }
+    .answers> div:last-child{
+        width: 420px;
     }
 
     .answers >div > p{
