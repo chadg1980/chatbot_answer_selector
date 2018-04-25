@@ -25,7 +25,7 @@ $(document).ready(function() {
       });
     }
   
-    function handleSearch(query, memberid) {
+    function handleSearch(query, memberid, preQuestion) {
       azSearch(query, function(data) {
         if (!data) {
           console.log('No Data');
@@ -33,9 +33,7 @@ $(document).ready(function() {
           return;
         }
         let i;
-        let preQuestion = 'You recently asked Leana &quot;'+ query +
-              '&quot; I don\'t think Leana gave you the best answer. ' +
-              'A better answer is ';
+        
         Object.assign(qnaData, {
           "query": query,
           "top_score" : [],
@@ -64,26 +62,38 @@ $(document).ready(function() {
 
         $("#no-good").click(function(){
           let copyText = document.getElementById("no_good_text");
-          let saveAnswer = copyText.value.replace(/\b(You recently asked Leana)/, "").replace(query, "");
-          //saveAnswer = saveAnswer.replace(query, "");
-          saveAnswer = saveAnswer.replace(/quot|""/, "");
-          saveAnswer = saveAnswer.replace(/\b(I don\'t think Leana gave you the best answer. A better answer is )/, "").trim();
+          let saveAnswer = copyText.value;
+          saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").trim().replace(/"/g, "");;
+          saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
+          saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an anwer to your question. I have an answer for you.)/, "");
           console.log(saveAnswer);
-          Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : saveAnswer} });
+          Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : saveAnswer.trim()} });
           sendToDatabase();
           copyText.select();
           document.execCommand("Copy");
-          window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
+          window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
         });
       });
     }
 
-    var queryQuestion = getParameterByName('question');
-    var memberid = getParameterByName('memberid');
-    if (queryQuestion && memberid) {
+    let queryQuestion = getParameterByName('question');
+    let memberid = getParameterByName('memberid');
+    let hasAnswer = getParameterByName('hasanswer');
+    if (queryQuestion && memberid && hasAnswer) {
         $('#incomingQuery').append(queryQuestion);
         $('#member').append(" " + memberid); 
-        handleSearch(queryQuestion, memberid);
+       
+        let preQuestion = 'You recently asked Leana, &quot;'+ queryQuestion ;
+        if(hasAnswer == "true"){
+          preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
+                          'A better answer is ';
+        }
+        else {
+          preQuestion +=  '&quot; and Leana couldn\'t find an anwer to your question. ' +
+                          'I have an answer for you. '
+        }
+        handleSearch(queryQuestion, memberid, preQuestion);
+        
     }
     else{
       $('.header').replaceWith('<h1>Bad Data</h1>')
@@ -128,7 +138,7 @@ function createListing(question, data, i, memberid, prequestion) {
       copyText.select();
       
       document.execCommand("Copy");
-      window.open('https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId='+memberid);
+      window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
     });
 }
 
