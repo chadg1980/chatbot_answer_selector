@@ -64,7 +64,12 @@ $(document).ready(function() {
 
         $("#no-good").click(function(){
           let copyText = document.getElementById("no_good_text");
-          Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : copyText.value} });
+          let saveAnswer = copyText.value.replace(/\b(You recently asked Leana)/, "").replace(query, "");
+          //saveAnswer = saveAnswer.replace(query, "");
+          saveAnswer = saveAnswer.replace(/quot|""/, "");
+          saveAnswer = saveAnswer.replace(/\b(I don\'t think Leana gave you the best answer. A better answer is )/, "").trim();
+          console.log(saveAnswer);
+          Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : saveAnswer} });
           sendToDatabase();
           copyText.select();
           document.execCommand("Copy");
