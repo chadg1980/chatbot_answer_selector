@@ -33,21 +33,33 @@ $(document).ready(function() {
           return;
         }
         let i;
-        
+        /* Send the JSON object to AWS Lambda
+        qnadata{
+        "query" : string,
+        "GTID"  :  int,
+        "azure_response_array" : string,
+        "custom_response" : string
+        }
+        */
+
         Object.assign(qnaData, {
           "query": query,
-          "top_score" : [],
-          "ground_truth" : {
-            "GTID" : "", 
-            "text" : ""
-          }
+          "GTID" : "",
+          "azure_response_array" : "",
+          "custom_response":""
         });
               
-              
+        let top_score_answer = "";              
         for(i = 0; i < data.value.length; i++){
+          if(i != data.value.length-1){
+            top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"] +", "
+          }
+          else{
+            top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"]
+          }
           createListing(query, data.value[i], i, memberid, preQuestion);
         }
-          
+        Object.assign(qnaData, {"azure_response_array" : top_score_answer} );
         $(".answers").append(`
           <div id="answer${i}">
           <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
@@ -66,8 +78,7 @@ $(document).ready(function() {
           saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").trim().replace(/"/g, "");;
           saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
           saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an anwer to your question. I have an answer for you.)/, "");
-          console.log(saveAnswer);
-          Object.assign(qnaData, {"ground_truth": {"GTID": null,  "text" : saveAnswer.trim()} });
+          Object.assign(qnaData, {"custom_response" : saveAnswer });
           sendToDatabase();
           copyText.select();
           document.execCommand("Copy");
@@ -98,7 +109,7 @@ $(document).ready(function() {
     else{
       $('.header').replaceWith('<h1>Bad Data</h1>')
       $('.query').remove();
-      //window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
+      window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
   }                                                   //Turned off for testing.
 });
 
@@ -117,8 +128,7 @@ function createListing(question, data, i, memberid, prequestion) {
   let removeChars = /\[uc\]|\[nm\]|\[ns\]/g;
   let textAnswercleaned = data.textAnswer.replace(removeChars, "");
   let queryandAnswer = prequestion + textAnswercleaned
-  qnaData["top_score"].push({"id":data.id, "score" : data["@search.score"] });
-  
+
   $(".answers").append(`
     <div id=answer${i}><p class="score">Score: 
     ${data["@search.score"]}</p><p id="textAnswer${i}">
@@ -131,7 +141,7 @@ function createListing(question, data, i, memberid, prequestion) {
   `)
   
     $("#myButton"+i).click(function(){
-      Object.assign(qnaData, {"ground_truth": {"GTID": data.id,  "text" : textAnswercleaned} });
+      Object.assign( {"GTID":  data.id}, qnaData);
       
       sendToDatabase();
       let copyText = document.getElementById("textInput"+i);
@@ -142,16 +152,12 @@ function createListing(question, data, i, memberid, prequestion) {
     });
 }
 
-/* Send the JSON object to the database
+/* Send the JSON object to AWS Lambda
 qnadata{
-  "query" : text,
-  "top_score" : [
-    {"id" : int, "score" : int }
-  ],
-  "ground_truth"{
-    "GTID" : int,
-    "text" : string
-  }
+  "query" : string,
+  "GTID"  :  int,
+  "azure_response_array" : string,
+  "custom_response" : string
 }
 */
 function sendToDatabase(){

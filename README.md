@@ -6,14 +6,14 @@ The Chatbot answer selector will receive a Query as a query string parameter. `?
 `memberid` `number`
 and a member ID
 The query will be sent to the Leana Diagnostic API `https://xnoyn83321.execute-api.us-west-2.amazonaws.com/dev/lenaquery`  
-The return value will include the top 3/4 answers.  
-The answers will be displayed as buttons for the Expert to select.  
-The Expert will select the best possible answer.  
-The Answer text will be copied to the clipboard.  
+The return value will include the top 5 answers. Plus a spot available to fill in a custom anser.
+The Expert will select the best possible answer. or fill in an answer.
+The Answer or custom answer text will be copied to the clipboard.  
 A new window will open to the members dashboard.   
-`https://diabetes.healthslate.com/app/educator/coachPatientMessages.action?patientId=14294`   
-1. this links to the old portal.  
-2. this link only works if the Expert is logged in already.  
-3. this links only to the current facility, in this case DPP.  
+https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid
+
+1. The button links to the new portal message page with the text on the clipboard.  
+2. The expert needs to be logged in, if not logged in the login page is displayed.
+3. The expert needs to have DPP selected, if not the message window will not be displayed.  
 
 
