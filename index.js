@@ -175,8 +175,10 @@ function sendToDatabase(){
     dataType : 'json',
     contentType: 'application/json',
     type: 'POST',
+    crossDomain: true,
     headers: {
-      "Accept" : 'application/json'
+      'accept' : 'application/json',
+      'Access-Control-Allow-Origin' : '*'
     },
     data: JSON.stringify(qnaData),
     success: function(result){
