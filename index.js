@@ -45,7 +45,7 @@ $(document).ready(function() {
 
         Object.assign(qnaData, {
           "query": query,
-          "GTID" : "",
+          "GTID" : -1,
           "azure_response_array" : "",
           "custom_response":"",
           "query_safeID" : null
@@ -69,17 +69,20 @@ $(document).ready(function() {
           <textarea type="text" id="no_good_text" >${preQuestion}</textarea>
           </label>
           <div class="buttonCenter">
-          <button id="no-good">Copy to Clipboard</>
+          <button class="buttons" id="no-good">SELECT</>
           </div>
           </div>
         `);
 
         $("#no-good").click(function(){
+          $(':button').prop('disabled', true);
+          $('.buttons').css('background-color', 'black');
+          qnaData.GTID = -1;
           let copyText = document.getElementById("no_good_text");
           let saveAnswer = copyText.value;
           saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").trim().replace(/"/g, "");;
           saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
-          saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an anwer to your question. I have an answer for you.)/, "");
+          saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. I have an answer for you.)/, "");
           Object.assign(qnaData, {"custom_response" : saveAnswer });
           sendToDatabase();
           copyText.select();
@@ -102,7 +105,7 @@ $(document).ready(function() {
                           'A better answer is ';
         }
         else {
-          preQuestion +=  '&quot; and Leana couldn\'t find an anwer to your question. ' +
+          preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
                           'I have an answer for you. '
         }
         handleSearch(queryQuestion, memberid, preQuestion);
@@ -137,14 +140,15 @@ function createListing(question, data, i, memberid, prequestion) {
     ${textAnswercleaned}</p>
     <input type="text" class="textboxAnswer" id="textInput${i}" value="${queryandAnswer}"/>
     <div class="buttonCenter">
-    <button id="myButton${i}">Copy to Clipboard</>
+    <button class="buttons" id="myButton${i}">SELECT</>
     </div>
     </div>
   `)
   
     $("#myButton"+i).click(function(){
-      Object.assign( {"GTID":  data.id}, qnaData);
-      
+      $(':button').prop('disabled', true);
+      $('.buttons').css('background-color', 'black');
+      qnaData.GTID = data.id;
       sendToDatabase();
       let copyText = document.getElementById("textInput"+i);
       copyText.select();
@@ -167,16 +171,18 @@ function sendToDatabase(){
   let thisURL = 'https://ld05uagkqd.execute-api.us-east-1.amazonaws.com/prod/data';
   $.ajax({
     url: thisURL,
+    dataType : 'json',
+    contentType: 'application/json',
     type: 'POST',
     headers: {
-      "content-type" : 'application/json'
+      "Accept" : 'application/json'
     },
-    data: qnaData,
+    data: JSON.stringify(qnaData),
     success: function(result){
       console.log(result);
     }
 
 
   });
-  console.log(qnaData);
+ 
 }
