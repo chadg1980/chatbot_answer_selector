@@ -34,11 +34,12 @@ $(document).ready(function() {
         }
         let i;
         /* Send the JSON object to AWS Lambda
-        qnadata{
-        "query" : string,
-        "GTID"  :  int,
-        "azure_response_array" : string,
-        "custom_response" : string
+       qnadata{
+          "query" : string,
+          "GTID"  :  int,
+          "azure_response_array" : string,
+          "custom_response" : string,
+          "query_safgeID" : string
         }
         */
 
@@ -46,7 +47,8 @@ $(document).ready(function() {
           "query": query,
           "GTID" : "",
           "azure_response_array" : "",
-          "custom_response":""
+          "custom_response":"",
+          "query_safeID" : null
         });
               
         let top_score_answer = "";              
@@ -157,9 +159,24 @@ qnadata{
   "query" : string,
   "GTID"  :  int,
   "azure_response_array" : string,
-  "custom_response" : string
+  "custom_response" : string,
+  "query_safgeID" : string
 }
 */
 function sendToDatabase(){
+  let thisURL = 'https://ld05uagkqd.execute-api.us-east-1.amazonaws.com/prod/data';
+  $.ajax({
+    url: thisURL,
+    type: 'POST',
+    headers: {
+      "content-type" : 'application/json'
+    },
+    data: qnaData,
+    success: function(result){
+      console.log(result);
+    }
+
+
+  });
   console.log(qnaData);
 }

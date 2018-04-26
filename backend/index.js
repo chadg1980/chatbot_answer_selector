@@ -2,21 +2,24 @@ let Airtable = require('airtable');
 let base = new Airtable({apiKey: "keySRLy2WHOoOzqPM"}).base('appazQ1yAI1aqEkEM');
 
 
-function insertRecord(){
+function insertRecord(data, callback){
     base('query_gt').create({
-        "query" : query, 
-        "GTID" : GTID,
-        "azure_response_array" : azure_response_array,
-        "custom_response" : custom_response,
-        "query_safeID" : query_safeID
+        "query" : data.query, 
+        "GTID" : data.GTID,
+        "azure_response_array" : data.azure_response_array,
+        "custom_response" : data.custom_response,
+        "query_safeID" : data.query_safeID
 
     }, function(err, record){
-        if(err) {console.error(err); return;}
+        if(err) {console.error(err); callback(err); return;}
         console.log(record.getId());
+        callback(null, "success");
 
     });
 }
 
-exports.hander = (event, context, callback) =>{
-    console.log('Received event' JSON.stringify(event, null, 2))
+
+exports.handler = (event, context, callback) =>{
+    insertRecord(event, callback);
+   
 }
