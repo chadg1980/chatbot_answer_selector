@@ -80,7 +80,7 @@ $(document).ready(function() {
           qnaData.GTID = -1;
           let copyText = document.getElementById("no_good_text");
           let saveAnswer = copyText.value;
-          saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").trim().replace(/"/g, "");;
+          saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").replace(/"/g, "");;
           saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
           saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. I have an answer for you.)/, "");
           Object.assign(qnaData, {"custom_response" : saveAnswer });
@@ -149,6 +149,7 @@ function createListing(question, data, i, memberid, prequestion) {
       $(':button').prop('disabled', true);
       $('.buttons').css('background-color', 'black');
       qnaData.GTID = data.id;
+      qnaData.custom_response = "";
       sendToDatabase();
       let copyText = document.getElementById("textInput"+i);
       copyText.select();
