@@ -50,6 +50,9 @@ $(document).ready(function() {
           "custom_response":"",
           "query_safeID" : null
         });
+
+
+
               
         let top_score_answer = "";              
         for(i = 0; i < data.value.length; i++){
@@ -84,7 +87,7 @@ $(document).ready(function() {
           saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
           saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. I have an answer for you.)/, "");
           Object.assign(qnaData, {"custom_response" : saveAnswer });
-          sendToDatabase();
+          //sendToDatabase();
           copyText.select();
           document.execCommand("Copy");
           window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
@@ -95,28 +98,56 @@ $(document).ready(function() {
     let queryQuestion = getParameterByName('question');
     let memberid = getParameterByName('memberid');
     let hasAnswer = getParameterByName('hasanswer');
-    if (queryQuestion && memberid && hasAnswer) {
-        $('#incomingQuery').append(queryQuestion);
-        $('#member').append(" " + memberid); 
-       
-        let preQuestion = 'You recently asked Leana, &quot;'+ queryQuestion ;
-        if(hasAnswer == "true"){
-          preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
-                          'A better answer is ';
-        }
-        else {
-          preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
-                          'I have an answer for you. '
-        }
-        handleSearch(queryQuestion, memberid, preQuestion);
+
+    let url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
+  let displayName;
+  $.ajax({
+    url: url, 
+    type: "GET",
+    headers: {
+        'Content-Type' : 'application/json'
+    },
+    accepts: "application/json; charset=utf-8",
+    success: function(data){
+      if(data){
+        let getName =  JSON.parse(data) ;
+        displayName = getName["display_name"];
+
+        if (queryQuestion && memberid && hasAnswer) {
+          $('#incomingQuery').append(queryQuestion);
+          $('#member').append(" " + memberid); 
+          
+          
+          let preQuestion = 'Hi, ' + displayName + ', You recently asked Leana, &quot;'+ queryQuestion ;
+          if(hasAnswer == "true"){
+            preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
+                            'A better answer is ';
+          }
+          else {
+            preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
+                            'I have an answer for you. '
+          }
+          console.log(preQuestion);
+          handleSearch(queryQuestion, memberid, preQuestion);
+          
+      }
+      else{
+        $('.header').replaceWith('<h1>Bad Data</h1>')
+        $('.query').remove();
+        window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
+      }
         
+      }
+      else 
+       displayName = ""
     }
-    else{
-      $('.header').replaceWith('<h1>Bad Data</h1>')
-      $('.query').remove();
-      window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
-  }                                                   //Turned off for testing.
 });
+    
+    
+    
+      
+})                                                 //Turned off for testing.
+
 
 /* Helper Functions */
 function getParameterByName(name, url) {
@@ -150,7 +181,7 @@ function createListing(question, data, i, memberid, prequestion) {
       $('.buttons').css('background-color', 'black');
       qnaData.GTID = data.id;
       qnaData.custom_response = "";
-      sendToDatabase();
+      //sendToDatabase();
       let copyText = document.getElementById("textInput"+i);
       copyText.select();
       
@@ -188,4 +219,10 @@ function sendToDatabase(){
 
   });
  
+}
+
+function getMemberName(thismemberid){
+  
+  return displayName;
+
 }
