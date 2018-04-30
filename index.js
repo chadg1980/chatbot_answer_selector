@@ -120,10 +120,10 @@ $(document).ready(function() {
             $('#member').append(" " + memberid); 
             
             
-            let preQuestion = 'Hi, ' + displayName + ', You recently asked Leana, &quot;'+ queryQuestion ;
+            let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
             if(hasAnswer == "true"){
               preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
-                              'A better answer is ';
+                              'A better answer is: ';
             }
             else {
               preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
