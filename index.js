@@ -1,8 +1,13 @@
 let qnaData = {};
 $(document).ready(function() {
 
-    // Store submitting question globally
+    
     var QUESTION;
+    let queryQuestion = getParameterByName('question');
+    let memberid = getParameterByName('memberid');
+    let hasAnswer = getParameterByName('hasanswer');
+    //URL to get display name from member id
+    let url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
     
     
     function azSearch(query, callback) {
@@ -25,7 +30,7 @@ $(document).ready(function() {
       });
     }
   
-    function handleSearch(query, memberid, preQuestion) {
+    function handleSearch(query, memberid, preQuestion, dName) {
       azSearch(query, function(data) {
         if (!data) {
           console.log('No Data');
@@ -33,6 +38,7 @@ $(document).ready(function() {
           return;
         }
         let i;
+        let top_score_answer = "";              
         /* Send the JSON object to AWS Lambda
        qnadata{
           "query" : string,
@@ -51,10 +57,7 @@ $(document).ready(function() {
           "query_safeID" : null
         });
 
-
-
-              
-        let top_score_answer = "";              
+        
         for(i = 0; i < data.value.length; i++){
           if(i != data.value.length-1){
             top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"] +", "
@@ -83,6 +86,9 @@ $(document).ready(function() {
           qnaData.GTID = -1;
           let copyText = document.getElementById("no_good_text");
           let saveAnswer = copyText.value;
+          console.log(saveAnswer);
+          saveAnswer = saveAnswer.replace("Hi, "+ dName +", ", "");
+          
           saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").replace(/"/g, "");;
           saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
           saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. I have an answer for you.)/, "");
@@ -95,11 +101,7 @@ $(document).ready(function() {
       });
     }
 
-    let queryQuestion = getParameterByName('question');
-    let memberid = getParameterByName('memberid');
-    let hasAnswer = getParameterByName('hasanswer');
-
-    let url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
+    
   let displayName;
   $.ajax({
     url: url, 
@@ -127,27 +129,21 @@ $(document).ready(function() {
             preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
                             'I have an answer for you. '
           }
-          console.log(preQuestion);
-          handleSearch(queryQuestion, memberid, preQuestion);
+          handleSearch(queryQuestion, memberid, preQuestion, displayName);
           
+        }
+        else{
+          $('.header').replaceWith('<h1>Bad Data</h1>')
+          $('.query').remove();
+          window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
+        }
       }
       else{
-        $('.header').replaceWith('<h1>Bad Data</h1>')
-        $('.query').remove();
-        window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
+        displayName = ""
       }
-        
-      }
-      else 
-       displayName = ""
     }
-});
-    
-    
-    
-      
-})                                                 //Turned off for testing.
-
+  });
+})                                                 
 
 /* Helper Functions */
 function getParameterByName(name, url) {
@@ -176,21 +172,21 @@ function createListing(question, data, i, memberid, prequestion) {
     </div>
   `)
   
-    $("#myButton"+i).click(function(){
-      $(':button').prop('disabled', true);
-      $('.buttons').css('background-color', 'black');
-      qnaData.GTID = data.id;
-      qnaData.custom_response = "";
-      //sendToDatabase();
-      let copyText = document.getElementById("textInput"+i);
-      copyText.select();
-      
-      document.execCommand("Copy");
-      window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
-    });
+  $("#myButton"+i).click(function(){
+    $(':button').prop('disabled', true);
+    $('.buttons').css('background-color', 'black');
+    qnaData.GTID = data.id;
+    qnaData.custom_response = "";
+    //sendToDatabase();
+    let copyText = document.getElementById("textInput"+i);
+    copyText.select();
+    
+    document.execCommand("Copy");
+    window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
+  });
 }
 
-/* Send the JSON object to AWS Lambda
+/* Send the JSON object to AWS Lambda then to Airtable
 qnadata{
   "query" : string,
   "GTID"  :  int,
@@ -215,14 +211,5 @@ function sendToDatabase(){
     success: function(result){
       console.log(result);
     }
-
-
   });
- 
-}
-
-function getMemberName(thismemberid){
-  
-  return displayName;
-
 }
