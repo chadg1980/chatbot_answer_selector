@@ -37,12 +37,12 @@ $(document).ready(function() {
         return;
       }
       let i;
-      let top_score_answer = "";              
+      let top_score_answer = "{";              
       /* Send the JSON object to AWS Lambda
       qnadata{
         "query" : string,
         "GTID"  :  int,
-        "azure_response_array" : string,
+        "azure_response_array" : array of strings,
         "custom_response" : string,
         "query_safgeID" : string
       }
@@ -59,10 +59,10 @@ $(document).ready(function() {
       
       for(i = 0; i < data.value.length; i++){
         if(i != data.value.length-1){
-          top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"] +", "
+          top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"] +", ";
         }
         else{
-          top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"]
+          top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"] + "}";
         }
         createListing(query, data.value[i], i, memberid, preQuestion);
       }
