@@ -153,7 +153,12 @@ answers >div > p{
     position: absolute;
     left: 5000px;
 }
-
+.correct h2{
+    text-align: center;
+}
+.correct button{
+    background-color: green;
+}
 @media only screen and (min-width: 768px) {
     .body{
         max-width: 1200px;

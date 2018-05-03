@@ -29,7 +29,7 @@ $(document).ready(function() {
     });
   }
   
-  function handleSearch(query, memberid, preQuestion, dName) {
+  function handleSearch(query, memberid, preQuestion, dName, isAnswered) {
     azSearch(query, function(data) {
       if (!data) {
         console.log('No Data');
@@ -64,9 +64,10 @@ $(document).ready(function() {
         else{
           top_score_answer += data.value[i]["id"] +  " : " + data.value[i]["@search.score"] + "}";
         }
-        createListing(query, data.value[i], i, memberid, preQuestion);
+        createListing(query, data.value[i], i, memberid, preQuestion, isAnswered);
       }
       Object.assign(qnaData, {"azure_response_array" : top_score_answer} );
+
       $(".answers").append(`
         <div id="answer${i}">
         <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
@@ -90,7 +91,7 @@ $(document).ready(function() {
         
         saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").replace(/"/g, "");;
         saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
-        saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. I have an answer for you.)/, "");
+        saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. Here is the answer you should have received.)/, "");
         Object.assign(qnaData, {"custom_response" : saveAnswer });
         sendToDatabase();
         copyText.select();
@@ -102,7 +103,7 @@ $(document).ready(function() {
 
   if(queryQuestion && memberid && hasAnswer){
     url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
- 
+    /* Get Display Name */
     $.ajax({
       url: url, 
       type: "GET",
@@ -114,11 +115,10 @@ $(document).ready(function() {
         if(data){
           let getName =  JSON.parse(data) ;
           displayName = getName["display_name"];
-
+          /* check for all querystring parameters */
           if (queryQuestion && memberid && hasAnswer) {
             $('#incomingQuery').append(queryQuestion);
             $('#member').append(" " + memberid); 
-            
             
             let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
             if(hasAnswer == "true"){
@@ -127,9 +127,9 @@ $(document).ready(function() {
             }
             else {
               preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
-                              'I have an answer for you. '
+                              'Here is the answer you should have received. '
             }
-            handleSearch(queryQuestion, memberid, preQuestion, displayName);
+            handleSearch(queryQuestion, memberid, preQuestion, displayName, hasAnswer);
             
           }
           else{
@@ -149,6 +149,8 @@ $(document).ready(function() {
     $('.query').remove();
     window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
   }
+
+  
   
 })     
                                             
@@ -164,12 +166,37 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function createListing(question, data, i, memberid, prequestion) {
+function createListing(question, data, i, memberid, prequestion, isAnswered) {
   let removeChars = /\[uc\]|\[nm\]|\[ns\]/g;
   let textAnswercleaned = data.textAnswer.replace(removeChars, "");
   let queryandAnswer = prequestion + textAnswercleaned
+  if(isAnswered.localeCompare("true") == 0 && i == 0){
+    
+    $(".answers").append(`
+    <div id=answer${i} class="correct">
+    <h2>Bot Selected Answer</h2>
+    <p class="score">Score: 
+    ${data["@search.score"]}</p><p id="textAnswer${i}">
+    ${textAnswercleaned}</p>
+    <input type="text" class="textboxAnswer" id="textInput${i}" value="${queryandAnswer}"/>
+    <div class="buttonCenter">
+    <button class="buttons" id="myButton${i}">MARK AS CORRECT</>
+    </div>
+    </div>
+  `)
 
-  $(".answers").append(`
+   /** button for choosing a better answer */
+   $("#myButton0").click(function(){
+    $(':button').prop('disabled', true);
+    $('.buttons').css('background-color', 'black');
+    qnaData.GTID = data.id;
+    qnaData.custom_response = "";
+    sendToDatabase();
+    
+  });
+  }
+  else{
+    $(".answers").append(`
     <div id=answer${i}><p class="score">Score: 
     ${data["@search.score"]}</p><p id="textAnswer${i}">
     ${textAnswercleaned}</p>
@@ -179,7 +206,8 @@ function createListing(question, data, i, memberid, prequestion) {
     </div>
     </div>
   `)
-  
+
+  /** button for choosing a better answer */
   $("#myButton"+i).click(function(){
     $(':button').prop('disabled', true);
     $('.buttons').css('background-color', 'black');
@@ -191,8 +219,16 @@ function createListing(question, data, i, memberid, prequestion) {
     
     document.execCommand("Copy");
     window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
+    
   });
+  }
+ 
+  
+
+  
 }
+
+
 
 /* Send the JSON object to AWS Lambda then to Airtable
 qnadata{
