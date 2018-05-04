@@ -1,13 +1,13 @@
 let qnaData = {};
 $(document).ready(function() {
 
-    
   var QUESTION;
   let queryQuestion = getParameterByName('question');
   let memberid = getParameterByName('memberid');
   let hasAnswer = getParameterByName('hasanswer');
   /**
    * hasAnswer will be false while in conference mode
+   * memberid will always be 14294 in conference mode
    */
   hasAnswer = "false";
   memberid = 14294;
@@ -15,6 +15,13 @@ $(document).ready(function() {
   let url = "";
   let displayName;
 
+  /**
+   * 
+   * @param {query} query 
+   * @param {*} callback 
+   * calls the chatbot back end
+   * returns the top scoring answers for that query
+   */
   function azSearch(query, callback) {
     $.ajax({
       type: "POST",
@@ -34,7 +41,9 @@ $(document).ready(function() {
       }
     });
   }
-  
+  /*
+    handlseSearch will make the search
+   */
   function handleSearch(query, memberid, preQuestion, dName, isAnswered) {
     azSearch(query, function(data) {
       if (!data) {
@@ -44,7 +53,8 @@ $(document).ready(function() {
       }
       let i;
       let top_score_answer = "{";              
-      /* Send the JSON object to AWS Lambda
+      /* 
+      Object for saving in the airtable
       qnadata{
         "query" : string,
         "GTID"  :  int,
@@ -53,7 +63,6 @@ $(document).ready(function() {
         "query_safgeID" : string
       }
       */
-
       Object.assign(qnaData, {
         "query": query,
         "GTID" : -1,
@@ -62,7 +71,6 @@ $(document).ready(function() {
         "query_safeID" : null
       });
 
-      
       for(i = 0; i < data.value.length; i++){
         if(i != data.value.length-1){
           top_score_answer += data.value[i]["id"] +  ": " + data.value[i]["@search.score"] +", ";
@@ -72,8 +80,9 @@ $(document).ready(function() {
         }
         createListing(query, data.value[i], i, memberid, preQuestion, isAnswered);
       }
-      Object.assign(qnaData, {"azure_response_array" : top_score_answer} );
 
+      Object.assign(qnaData, {"azure_response_array" : top_score_answer} );
+      /*
       $(".answers").append(`
         <div id="answer${i}">
         <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
@@ -90,6 +99,7 @@ $(document).ready(function() {
         $(':button').prop('disabled', true);
         $('.buttons').css('background-color', 'black');
         //BEGIN DELETE AFTER CONFERENCE:
+        let copyText = document.getElementById("no_good_text");
         let saveAnswer = copyText.value;
         console.log(saveAnswer);
         copyText.select();
@@ -97,7 +107,7 @@ $(document).ready(function() {
 
 
         //END DELETE AFTER CONFERENCE
-        /*
+        /*Commented out for conference
         qnaData.GTID = -1;
         let copyText = document.getElementById("no_good_text");
         let saveAnswer = copyText.value;
@@ -113,7 +123,7 @@ $(document).ready(function() {
         document.execCommand("Copy");
         window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
         */
-      });
+      //}); 
     });
   }
 
