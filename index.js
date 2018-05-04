@@ -6,6 +6,12 @@ $(document).ready(function() {
   let queryQuestion = getParameterByName('question');
   let memberid = getParameterByName('memberid');
   let hasAnswer = getParameterByName('hasanswer');
+  /**
+   * hasAnswer will be false while in conference mode
+   */
+  hasAnswer = "false";
+  memberid = 14294;
+
   let url = "";
   let displayName;
 
@@ -75,7 +81,7 @@ $(document).ready(function() {
         <textarea type="text" id="no_good_text" >${preQuestion}</textarea>
         </label>
         <div class="buttonCenter">
-        <button class="buttons" id="no-good">SELECT</>
+        <button class="buttons" id="no-good">Copy To Clipboard</>
         </div>
         </div>
       `);
@@ -83,6 +89,15 @@ $(document).ready(function() {
       $("#no-good").click(function(){
         $(':button').prop('disabled', true);
         $('.buttons').css('background-color', 'black');
+        //BEGIN DELETE AFTER CONFERENCE:
+        let saveAnswer = copyText.value;
+        console.log(saveAnswer);
+        copyText.select();
+        document.execCommand("Copy");
+
+
+        //END DELETE AFTER CONFERENCE
+        /*
         qnaData.GTID = -1;
         let copyText = document.getElementById("no_good_text");
         let saveAnswer = copyText.value;
@@ -97,12 +112,14 @@ $(document).ready(function() {
         copyText.select();
         document.execCommand("Copy");
         window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
+        */
       });
     });
   }
 
   if(queryQuestion && memberid && hasAnswer){
-    url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
+    //url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
+    url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+14294;
     /* Get Display Name */
     $.ajax({
       url: url, 
@@ -118,7 +135,8 @@ $(document).ready(function() {
           /* check for all querystring parameters */
           if (queryQuestion && memberid && hasAnswer) {
             $('#incomingQuery').append(queryQuestion);
-            $('#member').append(" " + memberid); 
+            //$('#member').append(" " + memberid);  Commented out for conference
+            $('#member').append(" HLTH" ); 
             
             let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
             if(hasAnswer == "true"){
@@ -129,6 +147,11 @@ $(document).ready(function() {
               preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
                               'Here is the answer you should have received. '
             }
+            /**
+             * prequestion will be "" until after conference
+             */
+            preQuestion = "";
+            memberid = "HLTH";
             handleSearch(queryQuestion, memberid, preQuestion, displayName, hasAnswer);
             
           }
@@ -160,11 +183,8 @@ $(document).ready(function() {
       location.replace(newurl);
     }
   })
-  
-  
 })     
                                             
-
 /* Helper Functions */
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
@@ -190,7 +210,7 @@ function createListing(question, data, i, memberid, prequestion, isAnswered) {
     ${textAnswercleaned}</p>
     <input type="text" class="textboxAnswer" id="textInput${i}" value="${queryandAnswer}"/>
     <div class="buttonCenter">
-    <button class="buttons" id="myButton${i}">MARK AS CORRECT</>
+    <button class="buttons" id="myButton${i}">Copy To Clipboard</>
     </div>
     </div>
   `)
@@ -201,7 +221,7 @@ function createListing(question, data, i, memberid, prequestion, isAnswered) {
     $('.buttons').css('background-color', 'black');
     qnaData.GTID = data.id;
     qnaData.custom_response = "";
-    sendToDatabase();
+    //sendToDatabase();
     
   });
   }
@@ -212,7 +232,7 @@ function createListing(question, data, i, memberid, prequestion, isAnswered) {
     ${textAnswercleaned}</p>
     <input type="text" class="textboxAnswer" id="textInput${i}" value="${queryandAnswer}"/>
     <div class="buttonCenter">
-    <button class="buttons" id="myButton${i}">SELECT</>
+    <button class="buttons" id="myButton${i}">Copy To Clipboard</>
     </div>
     </div>
   `)
@@ -223,19 +243,16 @@ function createListing(question, data, i, memberid, prequestion, isAnswered) {
     $('.buttons').css('background-color', 'black');
     qnaData.GTID = data.id;
     qnaData.custom_response = "";
-    sendToDatabase();
+    //sendToDatabase();                                                                             SEND TO DATABASE TURNED OFF
     let copyText = document.getElementById("textInput"+i);
     copyText.select();
     
     document.execCommand("Copy");
-    window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
+    //window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);  OPEN NEW WINDOW TURNED OFF
     
   });
   }
- 
-  
 
-  
 }
 
 
@@ -271,8 +288,9 @@ function sendToDatabase(){
 function replaceurl(oldURL){
   let urlArray = oldURL.split("?");
   let base = urlArray[0];
-  let newmemberid = getParameterByName('memberid');
-  let newhasAnswer = getParameterByName('hasanswer');
+  //let newmemberid = getParameterByName('memberid'); STATIC NUMBER FOR THE CONFERENCE
+  let newmemberid = 0
+  let newhasAnswer = "false";
   return (base+"?memberid="+newmemberid+"&hasanswer="+newhasAnswer);
   
 }
