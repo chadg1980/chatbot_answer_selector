@@ -150,6 +150,16 @@ $(document).ready(function() {
     window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
   }
 
+  $('#newQuery').bind('keyup', function(e){
+    e.preventDefault()
+    if(e.keyCode === 13){
+      let newQuery = encodeURIComponent( $('#newQuery').val() );
+      console.log(newQuery);
+      newurl = replaceurl(window.location.href) + "&question=" + newQuery;
+      console.log(newurl)
+      location.replace(newurl);
+    }
+  })
   
   
 })     
@@ -256,4 +266,13 @@ function sendToDatabase(){
       console.log(result);
     }
   });
+}
+
+function replaceurl(oldURL){
+  let urlArray = oldURL.split("?");
+  let base = urlArray[0];
+  let newmemberid = getParameterByName('memberid');
+  let newhasAnswer = getParameterByName('hasanswer');
+  return (base+"?memberid="+newmemberid+"&hasanswer="+newhasAnswer);
+  
 }
