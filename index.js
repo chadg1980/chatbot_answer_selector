@@ -127,10 +127,44 @@ $(document).ready(function() {
     });
   }
 
+  /**
+   * function until after the conference
+   *                                                                                    DELETE AFTER CONFERENCE
+   */
+  if (queryQuestion && memberid && hasAnswer) {
+    $('#incomingQuery').append(queryQuestion);
+    //$('#member').append(" " + memberid);  Commented out for conference
+    $('#member').append(" HLTH" ); 
+    
+    let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
+    if(hasAnswer == "true"){
+      preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
+                      'A better answer is: ';
+    }
+    else {
+      preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
+                      'Here is the answer you should have received. '
+    }
+    /**
+     * prequestion will be "" until after conference
+     */
+    preQuestion = "";
+    memberid = "HLTH";
+    handleSearch(queryQuestion, memberid, preQuestion, displayName, hasAnswer);
+    
+  }
+  else{
+    $('.header').replaceWith('<h1>Bad Data</h1>')
+    $('.query').remove();
+    window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
+  }
+  //                                                                                  END DELETE AFTER CONFERENCE
+/* Commented out for conference no need to get display name during the conference
   if(queryQuestion && memberid && hasAnswer){
-    //url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid;
+    //url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid; HARD CODED UNTIL AFTER THE CONFERENCE
     url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+14294;
-    /* Get Display Name */
+    // Get Display Name 
+    
     $.ajax({
       url: url, 
       type: "GET",
@@ -142,7 +176,7 @@ $(document).ready(function() {
         if(data){
           let getName =  JSON.parse(data) ;
           displayName = getName["display_name"];
-          /* check for all querystring parameters */
+           //check for all querystring parameters 
           if (queryQuestion && memberid && hasAnswer) {
             $('#incomingQuery').append(queryQuestion);
             //$('#member').append(" " + memberid);  Commented out for conference
@@ -157,9 +191,9 @@ $(document).ready(function() {
               preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
                               'Here is the answer you should have received. '
             }
-            /**
-             * prequestion will be "" until after conference
-             */
+            
+             \\ prequestion will be "" until after conference
+            
             preQuestion = "";
             memberid = "HLTH";
             handleSearch(queryQuestion, memberid, preQuestion, displayName, hasAnswer);
@@ -175,13 +209,13 @@ $(document).ready(function() {
           displayName = ""
         }
       }
-    });
+    }); 
   }
   else{
     $('.header').replaceWith('<h1>Bad Data</h1>')
     $('.query').remove();
     window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
-  }
+  } */
 
   $('#newQuery').bind('keyup', function(e){
     e.preventDefault()
