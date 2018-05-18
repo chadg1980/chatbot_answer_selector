@@ -1,6 +1,5 @@
 let Airtable = require('airtable');
-let base = new Airtable({apiKey: "keySRLy2WHOoOzqPM"}).base('appazQ1yAI1aqEkEM');
-
+let base = new Airtable({apiKey: ""}).base('appazQ1yAI1aqEkEM');
 
 function insertRecord(data, callback){
     base('query_gt').create({
@@ -14,10 +13,8 @@ function insertRecord(data, callback){
         if(err) {console.error(err); callback(err); return;}
         console.log(record.getId());
         callback(null, "success");
-
     });
 }
-
 
 exports.handler = (event, context, callback) =>{
     insertRecord(event, callback);
