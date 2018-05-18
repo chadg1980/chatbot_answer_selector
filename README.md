@@ -10,7 +10,6 @@ The return value will include the top 5 answers. Plus a spot available to fill i
 The Expert will select the best possible answer. or fill in an answer.
 The Answer or custom answer text will be copied to the clipboard.  
 A new window will open to the members dashboard.   
-https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid
 
 1. The button links to the new portal message page with the text on the clipboard.  
 2. The expert needs to be logged in, if not logged in the login page is displayed.
