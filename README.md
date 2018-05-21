@@ -27,5 +27,5 @@ The selected answer will be sent to Airtable, allowing the chatbot to be trained
 * AWS API Gateway
 * AWS Lambda
 * Node.JS
-* (Airtable)[https://airtable.com/] - Airtable 
+* [Airtable](https://airtable.com/) - The data is sent to Airtable for the Data Scientist to grab.
 
