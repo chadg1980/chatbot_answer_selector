@@ -106,9 +106,9 @@ $(document).ready(function() {
         console.log(saveAnswer);
         saveAnswer = saveAnswer.replace("Hi, "+ dName +", ", "");
         
-        saveAnswer = saveAnswer.replace(/\b(You recently asked Leana, ")/, "").replace(query, "").replace(/"/g, "");;
-        saveAnswer = saveAnswer.replace(/\b(I don't think Leana gave you the best answer. A better answer is )/, "").trim();
-        saveAnswer = saveAnswer.replace(/\b(and Leana couldn't find an answer to your question. Here is the answer you should have received.)/, "");
+        saveAnswer = saveAnswer.replace(/\b(You recently asked the bot, ")/, "").replace(query, "").replace(/"/g, "");;
+        saveAnswer = saveAnswer.replace(/\b(I don't think the bot gave you the best answer. A better answer is )/, "").trim();
+        saveAnswer = saveAnswer.replace(/\b(and the bot couldn't find an answer to your question. Here is the answer you should have received.)/, "");
         Object.assign(qnaData, {"custom_response" : saveAnswer });
         sendToDatabase();
         copyText.select();
@@ -143,13 +143,13 @@ $(document).ready(function() {
             $('#member').append(" " + memberid);  
             $('#member').append(" " + displayName ); 
             
-            let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
+            let preQuestion = 'Hi, ' + displayName + ', you recently asked the bot, &quot;'+ queryQuestion ;
             if(hasAnswer == "true"){
-              preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
+              preQuestion +=  '&quot; I don\'t think the bot gave you the best answer. ' +
                               'A better answer is: ';
             }
             else {
-              preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
+              preQuestion +=  '&quot; and the bot couldn\'t find an answer to your question. ' +
                               'Here is the answer you should have received. '
             }
             
