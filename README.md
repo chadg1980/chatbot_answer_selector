@@ -3,7 +3,7 @@ Chatbot Answer Selector (CAS)
 When the Subject Matter Expert (SME) sees a Question that the chatbot did not answer correctly, the CAS will give a quick way for the SME to respond to the customer.
 
 ## Motivation
-The chatbot is the way we are heading, but the chatbot does not give the correct answer every time. To get the end user the best possible experience, the CAS was created. Also when top answer given is not the best answer, the data scientist needs to collect this data from the SME so the chatbot can be 'learning' and give a better answer in the future. 
+The chatbot is the way we are heading, but the chatbot does not give the correct answer every time. To get the end user the best possible experience, the CAS was created. Also, when top answer given is not the best answer, the data scientist needs to collect this data from the SME so the chatbot can be 'learning' and give a better answer in the future. 
 When the SME is chatting with a live human, there is a search bar to quickly find the next question the end user might have. 
 
 ### Details
