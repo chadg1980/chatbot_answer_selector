@@ -82,7 +82,7 @@ $(document).ready(function() {
       }
 
       Object.assign(qnaData, {"azure_response_array" : top_score_answer} );
-      /*
+      
       $(".answers").append(`
         <div id="answer${i}">
         <p><span class="no_good">No Good answer listed for</span> <span class="queryClass">&quot;${query}&quot;</span></p>
@@ -98,16 +98,8 @@ $(document).ready(function() {
       $("#no-good").click(function(){
         $(':button').prop('disabled', true);
         $('.buttons').css('background-color', 'black');
-        //BEGIN DELETE AFTER CONFERENCE:
-        let copyText = document.getElementById("no_good_text");
-        let saveAnswer = copyText.value;
-        console.log(saveAnswer);
-        copyText.select();
-        document.execCommand("Copy");
-
-
-        //END DELETE AFTER CONFERENCE
-        /*Commented out for conference
+       
+       //Commented out for conference
         qnaData.GTID = -1;
         let copyText = document.getElementById("no_good_text");
         let saveAnswer = copyText.value;
@@ -122,44 +114,13 @@ $(document).ready(function() {
         copyText.select();
         document.execCommand("Copy");
         window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);
-        */
-      //}); 
+        
+      }); 
     });
   }
 
-  /**
-   * function until after the conference
-   *                                                                                    DELETE AFTER CONFERENCE
-   */
-  if (queryQuestion && memberid && hasAnswer) {
-    $('#incomingQuery').append(queryQuestion);
-    //$('#member').append(" " + memberid);  Commented out for conference
-    $('#member').append(" HLTH" ); 
-    
-    let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
-    if(hasAnswer == "true"){
-      preQuestion +=  '&quot; I don\'t think Leana gave you the best answer. ' +
-                      'A better answer is: ';
-    }
-    else {
-      preQuestion +=  '&quot; and Leana couldn\'t find an answer to your question. ' +
-                      'Here is the answer you should have received. '
-    }
-    /**
-     * prequestion will be "" until after conference
-     */
-    preQuestion = "";
-    memberid = "HLTH";
-    handleSearch(queryQuestion, memberid, preQuestion, displayName, hasAnswer);
-    
-  }
-  else{
-    $('.header').replaceWith('<h1>Bad Data</h1>')
-    $('.query').remove();
-    window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
-  }
-  //                                                                                  END DELETE AFTER CONFERENCE
-/* Commented out for conference no need to get display name during the conference
+                                                                                 
+
   if(queryQuestion && memberid && hasAnswer){
     //url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+memberid; HARD CODED UNTIL AFTER THE CONFERENCE
     url = "https://66r83wmh9a.execute-api.us-east-1.amazonaws.com/beta/displayname?member_id="+14294;
@@ -179,8 +140,8 @@ $(document).ready(function() {
            //check for all querystring parameters 
           if (queryQuestion && memberid && hasAnswer) {
             $('#incomingQuery').append(queryQuestion);
-            //$('#member').append(" " + memberid);  Commented out for conference
-            $('#member').append(" HLTH" ); 
+            $('#member').append(" " + memberid);  
+            $('#member').append(" " + displayName ); 
             
             let preQuestion = 'Hi, ' + displayName + ', you recently asked Leana, &quot;'+ queryQuestion ;
             if(hasAnswer == "true"){
@@ -192,10 +153,7 @@ $(document).ready(function() {
                               'Here is the answer you should have received. '
             }
             
-             \\ prequestion will be "" until after conference
-            
-            preQuestion = "";
-            memberid = "HLTH";
+            memberid = "";
             handleSearch(queryQuestion, memberid, preQuestion, displayName, hasAnswer);
             
           }
@@ -215,7 +173,7 @@ $(document).ready(function() {
     $('.header').replaceWith('<h1>Bad Data</h1>')
     $('.query').remove();
     window.location.replace("http://google.com"); //This will redirect if there is not proper query string parameters.
-  } */
+  } 
 
   $('#newQuery').bind('keyup', function(e){
     e.preventDefault()
@@ -265,7 +223,7 @@ function createListing(question, data, i, memberid, prequestion, isAnswered) {
     $('.buttons').css('background-color', 'black');
     qnaData.GTID = data.id;
     qnaData.custom_response = "";
-    //sendToDatabase();
+    sendToDatabase();
     
   });
   }
@@ -287,12 +245,12 @@ function createListing(question, data, i, memberid, prequestion, isAnswered) {
     $('.buttons').css('background-color', 'black');
     qnaData.GTID = data.id;
     qnaData.custom_response = "";
-    //sendToDatabase();                                                                             SEND TO DATABASE TURNED OFF
+    sendToDatabase();                                                                           
     let copyText = document.getElementById("textInput"+i);
     copyText.select();
     
     document.execCommand("Copy");
-    //window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);  OPEN NEW WINDOW TURNED OFF
+    window.open('https://diabetes.healthslate.com/facilityadmin/techsupport/direct-message/'+memberid);  
     
   });
   }
@@ -332,7 +290,7 @@ function sendToDatabase(){
 function replaceurl(oldURL){
   let urlArray = oldURL.split("?");
   let base = urlArray[0];
-  //let newmemberid = getParameterByName('memberid'); STATIC NUMBER FOR THE CONFERENCE
+  let newmemberid = getParameterByName('memberid'); 
   let newmemberid = 0
   let newhasAnswer = "false";
   return (base+"?memberid="+newmemberid+"&hasanswer="+newhasAnswer);
