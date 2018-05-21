@@ -185,6 +185,7 @@ $(document).ready(function() {
       location.replace(newurl);
     }
   })
+
 })     
                                             
 /* Helper Functions */
@@ -291,7 +292,6 @@ function replaceurl(oldURL){
   let urlArray = oldURL.split("?");
   let base = urlArray[0];
   let newmemberid = getParameterByName('memberid'); 
-  let newmemberid = 0
   let newhasAnswer = "false";
   return (base+"?memberid="+newmemberid+"&hasanswer="+newhasAnswer);
   

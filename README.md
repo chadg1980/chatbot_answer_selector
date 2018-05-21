@@ -13,9 +13,6 @@ The CAS also makes a call to the database to retrieve the end users display name
 The SME will pick the best answer for the question the end user asked, or write a custom answer, and press the button. 
 The selected answer will be sent to Airtable, allowing the chatbot to be trained and get better, at the same time the message is send to the user via in-app message.
 
-
-
-
 ## Technology Used
 
 ### Front End
